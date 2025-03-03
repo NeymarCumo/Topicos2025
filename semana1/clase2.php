@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Clase 2 - Topicos Avanzados de Programación</title>
+    <title>Clase 2 - Topicos Avanzados de la Programación</title>
 </head>
 <body>
-    <h1>Clase 2 - sintaxis de PHP</h1>
+    <h1>Clase 2 - Sintaxis de PHP</h1>
     <h2>Ejemplo 1 - Salida de Texto por PHP funcion echo</h2>
 <!--Ejemplo de como integrar una etiqueta php con un echo-->
     <?php
