@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Vino</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #7b2c3f; /* Cambio morado por vino */
+            --primary-hover: #5e212f; /* Tono vino más oscuro */
+            --text: #1e293b;
+            --text-light: #64748b;
+            --bg: #f8fafc;
+            --container-bg: #ffffff;
+            --input-bg: #f1f5f9;
+            --wave-bg: linear-gradient(135deg, #7b2c3f, #9d4b5f); /* Degradado vino */
+            --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        .dark-mode {
+            --primary: #9d4b5f; /* Vino más claro para modo oscuro */
+            --primary-hover: #7b2c3f;
+            --text: #f8fafc;
+            --text-light: #94a3b8;
+            --bg: #0f172a;
+            --container-bg: #1e293b;
+            --input-bg: #334155;
+            --wave-bg: linear-gradient(135deg, #9d4b5f, #b86b7f); /* Degradado vino para modo oscuro */
+            --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: var(--bg);
+            color: var(--text);
+        }
+
+        .container {
+            position: relative;
+            width: 850px;
+            height: 500px;
+            display: flex;
+            background: var(--container-bg);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+        }
+
+        .wave {
+            position: absolute;
+            width: 50%;
+            height: 100%;
+            background: var(--wave-bg);
+            transition: all 0.8s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+            z-index: 1;
+        }
+
+        .wave.login {
+            left: 0;
+            border-radius: 0 50% 50% 0;
+        }
+
+        .wave.register {
+            left: 50%;
+            border-radius: 50% 0 0 50%;
+        }
+
+        .form-container {
+            width: 50%;
+            padding: 50px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            z-index: 2;
+            transition: all 0.8s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+        }
+
+        .form-container.login {
+            left: 50%;
+        }
+
+        .form-container.register {
+            left: 0;
+        }
+
+        .form-header {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            margin-bottom: 30px;
+        }
+
+        h2 {
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .theme-toggle {
+            background: none;
+            border: none;
+            color: var(--text-light);
+            cursor: pointer;
+            font-size: 1.2rem;
+        }
+
+        .theme-toggle:hover {
+            color: var(--primary);
+        }
+
+        .input-group {
+            position: relative;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 14px 45px 14px 45px; /* Ajuste para iconos */
+            border: 2px solid transparent;
+            background: var(--input-bg);
+            border-radius: 8px;
+            color: var(--text);
+            font-size: 15px;
+            outline: none;
+            transition: border 0.3s;
+        }
+
+        .input-group input:focus {
+            border-color: var(--primary);
+        }
+
+        .input-group i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-light);
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-light);
+            cursor: pointer;
+            background: none;
+            border: none;
+            padding: 0;
+            font-size: 1rem;
+        }
+
+        .password-toggle:hover {
+            color: var(--primary);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            background: var(--primary);
+            color: white;
+            font-size: 16px;
+            font-weight: 500;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-top: 10px;
+        }
+
+        .btn:hover {
+            background: var(--primary-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .toggle-text {
+            margin-top: 20px;
+            font-size: 14px;
+            cursor: pointer;
+            color: var(--text-light);
+            text-align: center;
+        }
+
+        .toggle-text span:hover {
+            color: var(--primary);
+        }
+
+        .welcome-container {
+            position: absolute;
+            width: 50%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 3;
+            transition: all 0.8s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+        }
+
+        .welcome-container.login {
+            left: 0;
+        }
+
+        .welcome-container.register {
+            left: 50%;
+        }
+
+        .welcome-text {
+            font-size: 26px;
+            font-weight: 600;
+            color: white;
+            text-align: center;
+            padding: 0 40px;
+        }
+
+        .social-login {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .social-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--input-bg);
+            color: var(--text-light);
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .social-btn:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .error-message {
+            color: #ef4444;
+            font-size: 13px;
+            margin-top: 5px;
+            display: none;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 900px) {
+            .container {
+                width: 95%;
+                height: auto;
+                flex-direction: column;
+            }
+
+            .wave, .form-container, .welcome-container {
+                width: 100%;
+                position: relative;
+                left: 0 !important;
+                border-radius: 0 !important;
+            }
+
+            .wave {
+                height: 150px;
+                border-radius: 0 0 50% 50% !important;
+            }
+
+            .wave.register {
+                order: -1;
+                border-radius: 50% 50% 0 0 !important;
+            }
+
+            .form-container {
+                padding: 30px;
+            }
+
+            .welcome-text {
+                padding: 20px;
+                font-size: 22px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .form-container {
+                padding: 20px;
+            }
+
+            .input-group input {
+                padding: 12px 40px 12px 40px;
+            }
+
+            .social-login {
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="wave login" id="wave"></div>
+        
+        <div class="welcome-container login" id="welcome-container">
+            <div class="welcome-text" id="welcome-text">¡Bienvenido de nuevo!</div>
+        </div>
+        
+        <div class="form-container login" id="form-container">
+            <div class="form-header">
+                <h2 id="form-title">Iniciar sesión</h2>
+                <button class="theme-toggle" id="theme-toggle">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </div>
+            
+            <div class="input-group">
+                <i class="fas fa-envelope"></i>
+                <input type="email" id="email" placeholder="Correo electrónico" required>
+                <div class="error-message" id="email-error">Por favor ingresa un correo válido</div>
+            </div>
+            
+            <div class="input-group">
+                <i class="fas fa-lock"></i>
+                <input type="password" id="password" placeholder="Contraseña" required>
+                <button class="password-toggle" id="toggle-password">
+                    <i class="fas fa-eye"></i>
+                </button>
+                <div class="error-message" id="password-error">La contraseña debe tener al menos 6 caracteres</div>
+            </div>
+            
+            <button class="btn" id="submit-btn">Iniciar sesión</button>
+            
+            <div class="social-login">
+                <div class="social-btn">
+                    <i class="fab fa-google"></i>
+                </div>
+                <div class="social-btn">
+                    <i class="fab fa-facebook-f"></i>
+                </div>
+                <div class="social-btn">
+                    <i class="fab fa-apple"></i>
+                </div>
+            </div>
+            
+            <p class="toggle-text" id="toggle">¿No tienes una cuenta? <span>Regístrate</span></p>
+        </div>
+    </div>
+    
+    <script>
+        $(document).ready(function () {
+            // Estado inicial
+            let isLogin = true;
+            
+            // Toggle entre login y registro
+            $('#toggle').click(function () {
+                isLogin = !isLogin;
+                
+                const title = $('#form-title');
+                const button = $('#submit-btn');
+                const toggleText = $('#toggle span');
+                const wave = $('#wave');
+                const welcomeText = $('#welcome-text');
+                const formContainer = $('#form-container');
+                const welcomeContainer = $('#welcome-container');
+                
+                if (isLogin) {
+                    // Cambiar a login
+                    title.text('Iniciar sesión');
+                    button.text('Iniciar sesión');
+                    toggleText.text('Regístrate');
+                    wave.removeClass('register').addClass('login');
+                    welcomeText.text('¡Bienvenido de nuevo!');
+                    formContainer.removeClass('register').addClass('login');
+                    welcomeContainer.removeClass('register').addClass('login');
+                } else {
+                    // Cambiar a registro
+                    title.text('Regístrate');
+                    button.text('Registrarse');
+                    toggleText.text('Iniciar sesión');
+                    wave.removeClass('login').addClass('register');
+                    welcomeText.text('¡Únete a nosotros!');
+                    formContainer.removeClass('login').addClass('register');
+                    welcomeContainer.removeClass('login').addClass('register');
+                }
+            });
+            
+            // Toggle para mostrar/ocultar contraseña
+            $('#toggle-password').click(function () {
+                const password = $('#password');
+                const icon = $(this).find('i');
+                
+                if (password.attr('type') === 'password') {
+                    password.attr('type', 'text');
+                    icon.removeClass('fa-eye').addClass('fa-eye-slash');
+                } else {
+                    password.attr('type', 'password');
+                    icon.removeClass('fa-eye-slash').addClass('fa-eye');
+                }
+            });
+            
+            // Toggle modo claro/oscuro
+            $('#theme-toggle').click(function () {
+                $('body').toggleClass('dark-mode');
+                const icon = $(this).find('i');
+                
+                if ($('body').hasClass('dark-mode')) {
+                    icon.removeClass('fa-moon').addClass('fa-sun');
+                } else {
+                    icon.removeClass('fa-sun').addClass('fa-moon');
+                }
+            });
+            
+            // Validación básica del formulario
+            $('#submit-btn').click(function() {
+                let isValid = true;
+                const email = $('#email').val();
+                const password = $('#password').val();
+                
+                // Validar email
+                if (!email || !email.includes('@') || !email.includes('.')) {
+                    $('#email-error').show();
+                    isValid = false;
+                } else {
+                    $('#email-error').hide();
+                }
+                
+                // Validar contraseña
+                if (!password || password.length < 6) {
+                    $('#password-error').show();
+                    isValid = false;
+                } else {
+                    $('#password-error').hide();
+                }
+                
+                if (isValid) {
+                    alert(`Formulario ${isLogin ? 'login' : 'registro'} válido. Enviando datos...`);
+                }
+            });
+            
+            // Ocultar mensajes de error al empezar a escribir
+            $('input').on('input', function() {
+                const id = $(this).attr('id');
+                $(`#${id}-error`).hide();
+            });
+        });
+    </script>
+</body>
+</html>
